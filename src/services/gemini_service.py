@@ -3,7 +3,7 @@ import sys
 import logging
 import google.generativeai as genai
 from google.generativeai.types import File
-from typing import Optional
+from typing import Optional, List, Dict, Any
 
 # Set up logger
 logger = logging.getLogger(__name__)
