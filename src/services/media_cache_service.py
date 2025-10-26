@@ -339,35 +339,38 @@ class MediaCacheService:
             
             # Overall stats
             cursor = conn.execute("""
-                SELECT 
+                SELECT
                     COUNT(*) as total_files,
                     SUM(file_size) as total_size_bytes,
                     COUNT(CASE WHEN analysis_results IS NOT NULL THEN 1 END) as analyzed_files,
                     COUNT(DISTINCT brand_name) as unique_brands
                 FROM media_cache
             """)
-            stats = dict(cursor.fetchone()) if cursor.fetchone() else {}
-            
+            row = cursor.fetchone()
+            stats = dict(row) if row else {}
+
             # Image-specific stats
             cursor = conn.execute("""
-                SELECT 
+                SELECT
                     COUNT(*) as total_images,
                     SUM(file_size) as images_size_bytes,
                     COUNT(CASE WHEN analysis_results IS NOT NULL THEN 1 END) as analyzed_images
                 FROM media_cache WHERE media_type = 'image'
             """)
-            image_stats = dict(cursor.fetchone()) if cursor.fetchone() else {}
-            
-            # Video-specific stats  
+            row = cursor.fetchone()
+            image_stats = dict(row) if row else {}
+
+            # Video-specific stats
             cursor = conn.execute("""
-                SELECT 
+                SELECT
                     COUNT(*) as total_videos,
                     SUM(file_size) as videos_size_bytes,
                     COUNT(CASE WHEN analysis_results IS NOT NULL THEN 1 END) as analyzed_videos,
                     AVG(duration_seconds) as avg_duration_seconds
                 FROM media_cache WHERE media_type = 'video'
             """)
-            video_stats = dict(cursor.fetchone()) if cursor.fetchone() else {}
+            row = cursor.fetchone()
+            video_stats = dict(row) if row else {}
             
             # Combine stats
             combined_stats = {**stats, **image_stats, **video_stats}
